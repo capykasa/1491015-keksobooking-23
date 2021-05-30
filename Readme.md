@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
-* Студент: [Виктор Чепкасов](https://up.htmlacademy.ru/javascript/23/user/1491015).
-* Наставник: Полина Прокофьева.
+* Студент: [Виктор Чепкасов](https://up.htmlacademy.ru/profession/react/7/javascript/user/1491015).
+* Наставник: [Полина Прокофьева](https://up.htmlacademy.ru/profession/react/7/javascript/user/1322073).
 
 ---
 
