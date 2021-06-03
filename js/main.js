@@ -12,3 +12,4 @@ const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
   numberAfterPoint = Number('1' + string);
   return Math.round((Math.random() * (maxValue - minValue) + minValue) * numberAfterPoint) / numberAfterPoint;
 };
+ /* Помимо, возможно, неадекватного решения задачи, автоматическая проверка на ошибки выдает мне их 4 штуки, но я не понимаю, что они значат */
