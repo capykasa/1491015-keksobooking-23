@@ -6,7 +6,7 @@ const findRandomNumber = function (minValue, maxValue) {
 
 const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
   return (Math.random() * (maxValue - minValue) + minValue).toFixed([numberAfterPoint]);
-}
+};
 
 findRandomNumber(5, 12);
 findRandomCoordinates(1.110, 1.112, 4);
