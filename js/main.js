@@ -5,11 +5,11 @@ const findRandomNumber = function (minValue, maxValue) {
 /* пытался взять вдохновение, но взял в итоге весь код отсюда: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random */
 
 const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
-  let string = 0;
-  for (let i = 1; i < numberAfterPoint; i++) {
-    string += '0';
-  }
-  numberAfterPoint = Number('1' + string);
-  return Math.round((Math.random() * (maxValue - minValue) + minValue) * numberAfterPoint) / numberAfterPoint;
-};
- /* Помимо, возможно, неадекватного решения задачи, автоматическая проверка на ошибки выдает мне их 4 штуки, но я не понимаю, что они значат */
+  return (Math.random() * (maxValue - minValue) + minValue).toFixed([numberAfterPoint]);
+}
+
+findRandomNumber(5, 12);
+findRandomCoordinates(1.110, 1.112, 4);
+
+/* воспользовался этим прекрасным методом: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+но я не смог вызвать первую функцию во второй, потому что Math.round в первой функции дает на выходе второй просто много нулей после точки */
