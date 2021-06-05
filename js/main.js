@@ -14,6 +14,6 @@ const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
 
 findRandomNumber(5, 12);
 findRandomIntegerNumber(2, 13);
-findRandomCoordinates(1.110, 1.112, 4);
+findRandomCoordinates(1.110, 1.112, 6);
 
 /* воспользовался этим прекрасным методом: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed */
