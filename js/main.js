@@ -1,3 +1,11 @@
+const SIMILAR_ADS_COUNT = 10;
+
+const TYPES_OF_HOUSES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
+const CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
+const CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
+const FEATURES_OF_PLACES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+const PHOTO_OF_PLACES = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
+
 const findRandomNumber = function (minValue, maxValue) {
   return Math.random() * (maxValue - minValue) + minValue;
 };
@@ -6,14 +14,38 @@ const findRandomIntegerNumber = function (minValue, maxValue) {
   return Math.round(findRandomNumber(minValue, maxValue));
 };
 
-/* пытался взять вдохновение, но взял в итоге весь код отсюда: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random */
-
 const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
   return findRandomNumber(minValue, maxValue).toFixed([numberAfterPoint]);
 };
 
-findRandomNumber(5, 12);
-findRandomIntegerNumber(2, 13);
-findRandomCoordinates(1.110, 1.112, 6);
+const createAds = () => {
+  const location = {
+    lat: findRandomCoordinates(35.65000, 35.70000, 5),
+    lng: findRandomCoordinates(139.70000, 139.80000, 5),
+  };
+  return {
+    author: {
+      avatar: `img/avatars/user0${findRandomIntegerNumber(1, 8)}.png`,
+    },
 
-/* воспользовался этим прекрасным методом: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed */
+    location,
+
+    offer: {
+      title: 'Квартира',
+      adress: `${location.lat}, ${location.lng}`,
+      price: findRandomIntegerNumber(500, 10000),
+      type: TYPES_OF_HOUSES[findRandomIntegerNumber(0, TYPES_OF_HOUSES.length - 1)],
+      rooms: findRandomIntegerNumber(1, 10),
+      guests: findRandomIntegerNumber(1, 10),
+      checkin: CHECKIN_TIMES[findRandomIntegerNumber(0, CHECKIN_TIMES.length - 1)],
+      checkout: CHECKOUT_TIMES[findRandomIntegerNumber(0, CHECKOUT_TIMES.length - 1)],
+      features: FEATURES_OF_PLACES.slice(0, findRandomIntegerNumber(1, FEATURES_OF_PLACES.length - 1)),
+      description: 'Жить можно. Недолго, конечно',
+      photos: PHOTO_OF_PLACES.slice(0, findRandomIntegerNumber(1, PHOTO_OF_PLACES.length - 1)),
+    },
+  };
+};
+
+const similarAds = new Array(SIMILAR_ADS_COUNT).fill(null).map(() => createAds());
+
+similarAds;
