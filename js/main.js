@@ -24,7 +24,7 @@ const createAds = () => {
   const location = {
     lat: findRandomCoordinates(35.65000, 35.70000, 5),
     lng: findRandomCoordinates(139.70000, 139.80000, 5),
-  }
+  };
   return {
     author: {
       avatar: 'img/avatars/user' + 0 + findRandomIntegerNumber(1, 8) + '.png',
@@ -50,4 +50,4 @@ const createAds = () => {
 
 const similarAds = new Array(SIMILAR_ADS_COUNT).fill(null).map(() => createAds());
 
-console.log(similarAds);
+similarAds;
