@@ -48,4 +48,4 @@ const createAds = () => {
 
 const similarAds = new Array(SIMILAR_ADS_COUNT).fill(null).map(() => createAds());
 
-console.log(similarAds);
+similarAds;
