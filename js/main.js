@@ -1,3 +1,3 @@
-import { similarAds } from './create-ads.js'
+import { similarAds } from './create-ads.js';
 
 similarAds(10);
