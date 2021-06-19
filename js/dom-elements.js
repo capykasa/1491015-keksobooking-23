@@ -29,7 +29,7 @@ addingAds.forEach((ad) => {
   cardElement.querySelector('.popup__type').textContent = offerType();
 
   cardElement.querySelector('.popup__text--capacity').textContent = `${ad.offer.rooms} комнат для ${ad.offer.guests} гостей`;
-  cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`
+  cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const featureListElement = cardElement.querySelector('.popup__features');
   const modifiers = ad.offer.features.map((feature) => `popup__feature--${feature}`);
   featureListElement.querySelectorAll('.popup__feature')
