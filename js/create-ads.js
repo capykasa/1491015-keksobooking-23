@@ -1,4 +1,4 @@
-import { findRandomIntegerNumber, findRandomCoordinates } from './find-random';
+import { findRandomIntegerNumber, findRandomCoordinates } from './find-random.js';
 
 const TYPES_OF_HOUSES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
