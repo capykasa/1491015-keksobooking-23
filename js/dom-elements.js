@@ -5,9 +5,11 @@ const cardTemplate = document.querySelector('#card')
   .content
   .querySelector('.popup');
 
-const addingAds = similarAds();
+const COUNT_SIMILAR_ADS = 10;
 
-addingAds.forEach((ad) => {
+const addingAds = similarAds(COUNT_SIMILAR_ADS);
+
+const renderAd = (ad) => {
   const cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = ad.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = ad.offer.adress;
@@ -45,8 +47,6 @@ addingAds.forEach((ad) => {
   });
   cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
   mapCanvas.appendChild(cardElement);
-});
+};
 
-/* "Предусмотрите ситуацию, когда данных для заполнения не хватает. Например, отсутствует описание. В этом случае соответствующий блок в карточке скрывается."
-    Хотел бы совета по этому пункту.
-*/
+renderAd(addingAds[1]);

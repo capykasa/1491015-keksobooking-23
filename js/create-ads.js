@@ -6,8 +6,6 @@ const CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
 const FEATURES_OF_PLACES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const PHOTO_OF_PLACES = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
-const COUNT_SIMILAR_ADS = 10;
-
 const createAds = () => {
   const location = {
     lat: findRandomCoordinates(35.65000, 35.70000, 5),
@@ -36,6 +34,6 @@ const createAds = () => {
   };
 };
 
-const similarAds = () => new Array(COUNT_SIMILAR_ADS).fill(null).map(() => createAds());
+const similarAds = (count) => new Array(count).fill(null).map(() => createAds());
 
 export { similarAds };
