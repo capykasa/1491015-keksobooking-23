@@ -19,7 +19,7 @@ const createAds = () => {
     location,
 
     offer: {
-      title: 'Квартира',
+      title: 'Аренда прекрасного места',
       adress: `${location.lat}, ${location.lng}`,
       price: findRandomIntegerNumber(500, 10000),
       type: TYPES_OF_HOUSES[findRandomIntegerNumber(0, TYPES_OF_HOUSES.length - 1)],
@@ -34,4 +34,6 @@ const createAds = () => {
   };
 };
 
-export const similarAds = (count) => new Array(count).fill(null).map(() => createAds());
+const similarAds = (count) => new Array(count).fill(null).map(() => createAds());
+
+export { similarAds };

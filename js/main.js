@@ -1,3 +1,1 @@
-import { similarAds } from './create-ads.js';
-
-similarAds(10);
+import './dom-elements.js';
