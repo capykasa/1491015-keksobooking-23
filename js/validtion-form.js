@@ -11,6 +11,24 @@ let minPriceValue = 1000;
 
 const roomNumber = document.querySelector('#room_number');
 const capacity = document.querySelector('#capacity');
+const capacityOptions = capacity.querySelectorAll('option');
+
+roomNumber.addEventListener('input', () => {
+  let message = '';
+  if (!roomNumber.children[0].value === capacityOptions[2].value) {
+    message = `Доступно только для ${capacityOptions[2].textContent}`;
+  } else if (!roomNumber.children[1].value === capacityOptions[1].value || capacityOptions[2].value) {
+    message = `Доступно только для ${capacityOptions[1].textContent} или ${capacityOptions[2].textContent}`;
+  } else if (!roomNumber.children[2].value === capacityOptions[0].value || capacityOptions[1].value || capacityOptions[2].value) {
+    message = `Доступно только для ${capacityOptions[2].textContent}, ${capacityOptions[1].textContent} или ${capacityOptions[0].textContent}`;
+  } else if (!roomNumber.children[3].value === capacityOptions[3].value) {
+    message = `${capacityOptions[3].value}`;
+  } else {
+    message = '';
+  }
+  roomNumber.setCustomValidity(message);
+  roomNumber.reportValidity();
+});
 
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
@@ -39,10 +57,6 @@ priceInput.addEventListener('input', () => {
   }
   priceInput.setCustomValidity(message);
   priceInput.reportValidity();
-});
-
-roomNumber.addEventListener('change', () => {
-  capacity.value = roomNumber.value;
 });
 
 timeIn.addEventListener('change', () => {
