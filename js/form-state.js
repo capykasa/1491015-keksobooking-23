@@ -11,7 +11,15 @@ const removeToForm = (someClass, someElement) => {
   someClass.querySelectorAll(someElement).forEach((item) => item.removeAttribute('disabled', 'disabled'));
 };
 
-adToForm(adForm, 'fieldset');
-adToForm(mapFilters, 'select');
-removeToForm(adForm, 'fieldset');
-removeToForm(mapFilters, 'select');
+const inactiveState = () => {
+  adToForm(adForm, 'fieldset');
+  adToForm(mapFilters, 'select');
+};
+
+const activeState = () => {
+  removeToForm(adForm, 'fieldset');
+  removeToForm(mapFilters, 'select');
+};
+
+inactiveState();
+activeState();
