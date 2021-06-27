@@ -7,8 +7,8 @@ const typeOfHouse = document.querySelector('#type');
 const MAX_PRICE_VALUE = 1000000;
 let minPriceValue = 1000;
 
-/*const roomNumber = document.querySelector('#room_number');
-const capacity = document.querySelector('#capacity');*/
+const roomNumber = document.querySelector('#room_number');
+const capacity = document.querySelector('#capacity');
 
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
@@ -49,9 +49,9 @@ priceInput.addEventListener('input', () => {
   priceInput.reportValidity();
 });
 
-/*roomNumber.addEventListener('change', () => {
+roomNumber.addEventListener('change', () => {
   capacity.value = roomNumber.value;
-});*/
+});
 
 timeIn.addEventListener('change', () => {
   timeOut.value = timeIn.value;
