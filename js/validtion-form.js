@@ -25,7 +25,6 @@ typeOfHouse.addEventListener('change', () => {
   } else if (typeOfHouse.value === 'palace') {
     minPriceValue = 10000;
   }
-  console.log(minPriceValue);
 });
 
 titleInput.addEventListener('input', () => {
