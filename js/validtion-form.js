@@ -1,12 +1,17 @@
-const titleInput = document.querySelector('#title');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
+const MAX_PRICE_VALUE = 1000000;
+const titleInput = document.querySelector('#title');
 
 const priceInput = document.querySelector('#price');
-const MAX_PRICE_VALUE = 1000000;
 
 const roomNumber = document.querySelector('#room_number');
 const capacity = document.querySelector('#capacity');
+
+const setValidity = (element, item) => {
+  element.setCustomValidity(item);
+  element.reportValidity();
+};
 
 const checkingRoomsAndGuests = function () {
   let message = '';
@@ -21,8 +26,7 @@ const checkingRoomsAndGuests = function () {
   } else {
     message = '';
   }
-  roomNumber.setCustomValidity(message);
-  roomNumber.reportValidity();
+  setValidity(roomNumber, message);
 };
 
 roomNumber.addEventListener('change', checkingRoomsAndGuests);
@@ -35,8 +39,7 @@ titleInput.addEventListener('input', () => {
   } else if (titleInput.value.length > MAX_TITLE_LENGTH) {
     message = `Максимум 100 символов. Удалите ${titleInput.value.length - MAX_TITLE_LENGTH} симв.`;
   }
-  titleInput.setCustomValidity(message);
-  titleInput.reportValidity();
+  setValidity(titleInput, message);
 });
 
 priceInput.addEventListener('input', () => {
@@ -44,6 +47,5 @@ priceInput.addEventListener('input', () => {
   if (priceInput.value > MAX_PRICE_VALUE) {
     message = `Максимальное значение: ${MAX_PRICE_VALUE}`;
   }
-  priceInput.setCustomValidity(message);
-  priceInput.reportValidity();
+  setValidity(priceInput, message);
 });
