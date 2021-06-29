@@ -11,18 +11,17 @@ const MAX_PRICE_VALUE = 1000000;
 
 const roomNumber = document.querySelector('#room_number');
 const capacity = document.querySelector('#capacity');
-const capacityOptions = capacity.querySelectorAll('option');
 
 const checkingRoomsAndGuests = function () {
   let message = '';
-  if (roomNumber.value == 1 && capacity.value != 1) {
-    message = `Доступно только для ${capacityOptions[2].textContent}`;
-  } else if (roomNumber.value == 2 && capacity.value != 2 && capacity.value != 1) {
-    message = `Доступно только для ${capacityOptions[1].textContent} или ${capacityOptions[2].textContent}`;
-  } else if (roomNumber.value == 3 && capacity.value != 3 && capacity.value != 2 && capacity.value != 1) {
-    message = `Доступно только для ${capacityOptions[2].textContent}, ${capacityOptions[1].textContent} или ${capacityOptions[0].textContent}`;
-  } else if (roomNumber.value == 100 && capacity.value != 0) {
-    message = `${capacityOptions[3].textContent}`;
+  if (roomNumber.value === '1' && capacity.value !== '1') {
+    message = `Доступно только для ${capacity[2].textContent}`;
+  } else if (roomNumber.value === '2' && capacity.value !== '2' && capacity.value !== '1') {
+    message = `Доступно только для ${capacity[1].textContent} или ${capacity[2].textContent}`;
+  } else if (roomNumber.value === '3' && capacity.value !== '3' && capacity.value !== '2' && capacity.value !== '1') {
+    message = `Доступно только для ${capacity[2].textContent}, ${capacity[1].textContent} или ${capacity[0].textContent}`;
+  } else if (roomNumber.value === '100' && capacity.value !== '0') {
+    message = `${capacity[3].textContent}`;
   } else {
     message = '';
   }
