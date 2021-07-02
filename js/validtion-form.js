@@ -18,6 +18,7 @@ const timeOut = document.querySelector('#timeout');
 
 typeOfHouse.addEventListener('change', () => {
   minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
+  priceInput.placeholder = minPriceValue;
 });
 
 const setValidity = (element, item) => {
