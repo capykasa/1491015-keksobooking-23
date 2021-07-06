@@ -27,10 +27,7 @@ const map = L.map('map-canvas')
   .on('load', () => {
     activeState();
   })
-  .setView({
-    lat: CENTER_TOKYO.lat,
-    lng: CENTER_TOKYO.lng,
-  }, 16);
+  .setView(CENTER_TOKYO, 16);
 
 const titleLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -48,10 +45,7 @@ const markerIcon = L.icon({
 });
 
 const marker = L.marker(
-  {
-    lat: CENTER_TOKYO.lat,
-    lng: CENTER_TOKYO.lng,
-  },
+  CENTER_TOKYO,
   {
     draggable: true,
     icon: markerIcon,
