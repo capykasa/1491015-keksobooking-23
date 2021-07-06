@@ -2,6 +2,23 @@ import { activeState } from './form-state.js';
 import { similarAds } from './create-ads.js';
 import { HOUSES_TYPES } from './create-ads.js';
 
+const CENTER_TOKYO = {
+  lat: 35.685646262993686,
+  lng: 139.75273150919134,
+};
+
+const MAIN_MARKER = {
+  url: 'img/main-pin.svg',
+  size: [52, 52],
+  anchor: [26, 52],
+};
+
+const SIMILAR_MARKER = {
+  url: 'img/pin.svg',
+  size: [40, 40],
+  anchor: [20, 40],
+};
+
 const address = document.querySelector('#address');
 
 const points = similarAds(50);
@@ -11,27 +28,29 @@ const map = L.map('map-canvas')
     activeState();
   })
   .setView({
-    lat: 35.685646262993686,
-    lng: 139.75273150919134,
+    lat: CENTER_TOKYO.lat,
+    lng: CENTER_TOKYO.lng,
   }, 16);
 
-L.tileLayer(
+const titleLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
-).addTo(map);
+);
+
+titleLayer.addTo(map);
 
 const markerIcon = L.icon({
-  iconUrl: 'img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconUrl: MAIN_MARKER.url,
+  iconSize: MAIN_MARKER.size,
+  iconAnchor: MAIN_MARKER.anchor,
 });
 
 const marker = L.marker(
   {
-    lat: 35.685646262993686,
-    lng: 139.75273150919134,
+    lat: CENTER_TOKYO.lat,
+    lng: CENTER_TOKYO.lng,
   },
   {
     draggable: true,
@@ -39,10 +58,12 @@ const marker = L.marker(
   },
 ).addTo(map);
 
-address.value = `${marker._latlng.lat.toFixed(5)}, ${marker._latlng.lng.toFixed(5)}`;
+const addressValue = () => `${marker._latlng.lat.toFixed(5)}, ${marker._latlng.lng.toFixed(5)}`;
+
+address.value = addressValue();
 
 marker.addEventListener('move', () => {
-  address.value = `${marker._latlng.lat.toFixed(5)}, ${marker._latlng.lng.toFixed(5)}`;
+  address.value = addressValue();
 });
 
 const createPopup = (point) => {
@@ -78,9 +99,9 @@ const createPopup = (point) => {
 
 points.forEach((value) => {
   const icon = L.icon({
-    iconUrl: 'img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconUrl: SIMILAR_MARKER.url,
+    iconSize: SIMILAR_MARKER.size,
+    iconAnchor: SIMILAR_MARKER.anchor,
   });
   const similarAdMarker = L.marker(
     [
