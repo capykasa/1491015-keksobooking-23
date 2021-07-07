@@ -8,9 +8,9 @@ const cardTemplate = document.querySelector('#card')
 
 const COUNT_SIMILAR_ADS = 10;
 
-const addingAds = similarAds(COUNT_SIMILAR_ADS);
+export const addingAds = similarAds(COUNT_SIMILAR_ADS);
 
-const renderAd = (ad) => {
+export const renderAd = (ad) => {
   const cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = ad.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = ad.offer.adress;
@@ -38,5 +38,3 @@ const renderAd = (ad) => {
   cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
   mapCanvas.appendChild(cardElement);
 };
-
-renderAd(addingAds[1]);
