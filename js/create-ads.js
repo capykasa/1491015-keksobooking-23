@@ -1,4 +1,4 @@
-import { findRandomIntegerNumber, findRandomCoordinates } from './find-random.js';
+import { findRandomIntegerNumber, findRandomCoordinates } from './util.js';
 
 export const HOUSES_TYPES = {
   'palace': { name: 'Дворец', minPrice: 10000 },

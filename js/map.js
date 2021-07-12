@@ -129,3 +129,5 @@ const addSimilarMarker = (item) => {
 };
 
 getData(addSimilarMarker);
+
+export { map, marker, CENTER_TOKYO };
