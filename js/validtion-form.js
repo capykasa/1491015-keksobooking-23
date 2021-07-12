@@ -1,4 +1,19 @@
+import { sendData } from './api.js';
 import { HOUSES_TYPES } from './create-ads.js';
+import { CENTER_TOKYO, map, marker } from './map.js';
+import { closedWindow, isEnterEvent, isEscEvent } from './util.js';
+
+const resetForm = document.querySelector('.ad-form__reset');
+
+const bodyElement = document.querySelector('body');
+
+const successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+
+const errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -15,6 +30,8 @@ const typeOfHouse = document.querySelector('#type');
 
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
+
+const publishForm = document.querySelector('.ad-form');
 
 typeOfHouse.addEventListener('change', () => {
   minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
@@ -72,3 +89,41 @@ timeIn.addEventListener('change', () => {
 timeOut.addEventListener('change', () => {
   timeIn.value = timeOut.value;
 });
+
+resetForm.addEventListener('click', () => {
+  marker.setLatLng(CENTER_TOKYO);
+  map.setView(CENTER_TOKYO, 16);
+});
+
+const successMessage = () => {
+  const successElement = successTemplate.cloneNode(true);
+  bodyElement.appendChild(successElement);
+  closedWindow(successElement);
+  isEscEvent(successElement);
+  isEnterEvent(successElement);
+  publishForm.reset();
+  marker.setLatLng(CENTER_TOKYO);
+  map.setView(CENTER_TOKYO, 16);
+};
+
+const errorMessage = () => {
+  const errorElement = errorTemplate.cloneNode(true);
+  bodyElement.appendChild(errorElement);
+  closedWindow(errorElement);
+  isEscEvent(errorElement);
+  isEnterEvent(errorElement);
+};
+
+const setFormSubmit = (onSuccess, onFail) => {
+  publishForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      () => onSuccess(),
+      () => onFail(),
+      new FormData(evt.target),
+    );
+  });
+};
+
+setFormSubmit(successMessage, errorMessage);

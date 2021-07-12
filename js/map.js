@@ -1,6 +1,6 @@
 import { activeState } from './form-state.js';
-import { similarAds } from './create-ads.js';
 import { HOUSES_TYPES } from './create-ads.js';
+import { getData } from './api.js';
 
 const CENTER_TOKYO = {
   lat: 35.685646262993686,
@@ -20,8 +20,6 @@ const SIMILAR_MARKER = {
 };
 
 const address = document.querySelector('#address');
-
-const points = similarAds(50);
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -74,40 +72,62 @@ const createPopup = (point) => {
 
   popupElement.querySelector('.popup__text--capacity').textContent = `${point.offer.rooms} комнат для ${point.offer.guests} гостей`;
   popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${point.offer.checkin}, выезд до ${point.offer.checkout}`;
-  const featureListElement = popupElement.querySelector('.popup__features');
-  const modifiers = point.offer.features.map((feature) => `popup__feature--${feature}`);
-  featureListElement.querySelectorAll('.popup__feature')
-    .forEach((item) => {
-      const modifier = item.classList[1];
-      if (!modifiers.includes(modifier)) {
-        item.remove();
-      }
-    });
-  popupElement.querySelector('.popup__description').textContent = point.offer.description;
-  point.offer.photos.forEach((photo) => {
-    popupElement.querySelector('.popup__photo').src = photo;
-  });
 
+  const featureListElement = popupElement.querySelector('.popup__features');
+  if (point.offer.features === undefined) {
+    featureListElement.classList.add('hidden');
+  } else {
+    const modifiers = point.offer.features.map((feature) => `popup__feature--${feature}`);
+    featureListElement.querySelectorAll('.popup__feature')
+      .forEach((item) => {
+        const modifier = item.classList[1];
+        if (!modifiers.includes(modifier)) {
+          item.remove();
+        }
+      });
+  }
+
+  popupElement.querySelector('.popup__description').textContent = point.offer.description;
+
+  const photosListElement = popupElement.querySelector('.popup__photos');
+  if (point.offer.photos === undefined) {
+    photosListElement.classList.add('hidden');
+  }
+  else {
+    const photoElement = photosListElement.querySelector('.popup__photo');
+    point.offer.photos.forEach((photo) => {
+      const photoElementCopy = photoElement.cloneNode(true);
+      photoElementCopy.src = photo;
+      photosListElement.appendChild(photoElementCopy);
+    });
+    photoElement.remove();
+  }
   return popupElement;
 };
 
-points.forEach((value) => {
-  const icon = L.icon({
-    iconUrl: SIMILAR_MARKER.url,
-    iconSize: SIMILAR_MARKER.size,
-    iconAnchor: SIMILAR_MARKER.anchor,
-  });
-  const similarAdMarker = L.marker(
-    [
-      value.location.lat,
-      value.location.lng,
-    ],
-    {
-      icon,
+const addSimilarMarker = (item) => {
+  item.forEach((value) => {
+    const icon = L.icon({
+      iconUrl: SIMILAR_MARKER.url,
+      iconSize: SIMILAR_MARKER.size,
+      iconAnchor: SIMILAR_MARKER.anchor,
     });
+    const similarAdMarker = L.marker(
+      [
+        value.location.lat,
+        value.location.lng,
+      ],
+      {
+        icon,
+      });
 
-  similarAdMarker
-    .addTo(map)
-    .bindPopup(
-      createPopup(value));
-});
+    similarAdMarker
+      .addTo(map)
+      .bindPopup(
+        createPopup(value));
+  });
+};
+
+getData(addSimilarMarker);
+
+export { map, marker, CENTER_TOKYO };
