@@ -1,4 +1,15 @@
+import { sendData } from './api.js';
 import { HOUSES_TYPES } from './create-ads.js';
+
+const bodyElement = document.querySelector('body');
+
+const successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+
+const errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -15,6 +26,8 @@ const typeOfHouse = document.querySelector('#type');
 
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
+
+const publishForm = document.querySelector('.ad-form');
 
 typeOfHouse.addEventListener('change', () => {
   minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
@@ -72,3 +85,27 @@ timeIn.addEventListener('change', () => {
 timeOut.addEventListener('change', () => {
   timeIn.value = timeOut.value;
 });
+
+const successMessage = () => {
+  const successElement = successTemplate.cloneNode(true);
+  bodyElement.appendChild(successElement);
+};
+
+const errorMessage = () => {
+  const errorElement = errorTemplate.cloneNode(true);
+  bodyElement.appendChild(errorElement);
+};
+
+const setFormSubmit = (onSuccess, onFail) => {
+  publishForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      () => onSuccess(),
+      () => onFail(),
+      new FormData(evt.target),
+    );
+  });
+};
+
+setFormSubmit(successMessage, errorMessage);
