@@ -109,7 +109,7 @@ const createPopup = (point) => {
   return popupElement;
 };
 
-const getAdRank = (ad) => {
+const compareAds = (ad) => {
   const adWiFiInput = document.querySelector('#filter-wifi');
   const adDishwasherInput = document.querySelector('#filter-dishwasher');
   const adParkingInput = document.querySelector('#filter-parking');
@@ -122,34 +122,6 @@ const getAdRank = (ad) => {
   const housingRoomsElement = document.querySelector('#housing-rooms');
   const housingGuestsElement = document.querySelector('#housing-guests');
 
-  let rank = 0;
-
-  if (ad.offer.features !== undefined) {
-
-    if (adWiFiInput.checked) {
-      if (ad.offer.features.includes(adWiFiInput.value)) { rank += 1; }
-    }
-    if (adDishwasherInput.checked) {
-      if (ad.offer.features.includes(adDishwasherInput.value)) { rank += 1; }
-    }
-    if (adParkingInput.checked) {
-      if (ad.offer.features.includes(adParkingInput.value)) { rank += 1; }
-    }
-    if (adWasherInput.checked) {
-      if (ad.offer.features.includes(adWasherInput.value)) { rank += 1; }
-    }
-    if (adElevatorInput.checked) {
-      if (ad.offer.features.includes(adElevatorInput.value)) { rank += 1; }
-    }
-    if (adConditionerInput.checked) {
-      if (ad.offer.features.includes(adConditionerInput.value)) { rank += 1; }
-    }
-  } else {
-    rank = 0;
-  }
-
-  if (ad.offer.type === housingTypeElement.value) { rank += 3; }
-
   const priceValue = () => {
     if (ad.offer.price >= 10000 && ad.offer.price <= 50000) {
       return 'middle';
@@ -160,21 +132,32 @@ const getAdRank = (ad) => {
     if (ad.offer.price > 50000) {
       return 'high';
     }
+    return 'any';
   };
-  if (priceValue() === housingPriceElement.value) { rank += 2; }
-  if (ad.offer.rooms === Number(housingRoomsElement.value)) {
-    rank += 2;
-  } else if (ad.offer.rooms > Number(housingRoomsElement.value)) { rank += 1; }
-  if (ad.offer.guests <= housingGuestsElement.value) { rank += 2; }
+  if (ad.offer.type === housingTypeElement.value || housingTypeElement.value === 'any') {
+    if (priceValue() === housingPriceElement.value || housingPriceElement.value === 'any') {
+      if (ad.offer.rooms === Number(housingRoomsElement.value) || housingRoomsElement.value === 'any') {
+        if (ad.offer.guests === housingGuestsElement.value || housingGuestsElement.value === 'any') {
+          if (ad.offer.features !== undefined) {
+            if ((adWiFiInput.checked && ad.offer.features.includes(adWiFiInput.value)) || !adWiFiInput.checked) {
+              if ((adDishwasherInput.checked && ad.offer.features.includes(adDishwasherInput.value)) || !adDishwasherInput.checked) {
+                if ((adParkingInput.checked && ad.offer.features.includes(adParkingInput.value)) || !adParkingInput.checked) {
+                  if ((adWasherInput.checked && ad.offer.features.includes(adWasherInput.value)) || !adWasherInput.checked) {
+                    if ((adElevatorInput.checked && ad.offer.features.includes(adElevatorInput.value)) || !adElevatorInput.checked) {
+                      if ((adConditionerInput.checked && ad.offer.features.includes(adConditionerInput.value)) || !adConditionerInput.checked) {
 
-  return rank;
-};
-
-const compareAds = (adA, adB) => {
-  const rankA = getAdRank(adA);
-  const rankB = getAdRank(adB);
-
-  return rankB - rankA;
+                        return true;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 };
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -184,7 +167,7 @@ const addSimilarMarker = (item) => {
   markerGroup.clearLayers();
   item
     .slice()
-    .sort(compareAds)
+    .filter(compareAds)
     .slice(0, 10)
     .forEach((value) => {
       const icon = L.icon({
