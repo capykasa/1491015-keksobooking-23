@@ -1,7 +1,10 @@
-import { activeState } from './form-state.js';
+import { activeState, inactiveState } from './form-state.js';
 import { HOUSES_TYPES } from './create-ads.js';
 import { getData } from './api.js';
 import { adConditionerChange, adDishwasherChange, adElevatorChange, adParkingChange, adWasherChange, adWiFiChange, housingGuestsChange, housingPriceChange, housingRoomsChange, housingTypeChange } from './validtion-form.js';
+import { debounce } from './utils/debounce.js';
+
+const RERENDER_DELAY = 500;
 
 const CENTER_TOKYO = {
   lat: 35.685646262993686,
@@ -121,28 +124,47 @@ const getAdRank = (ad) => {
 
   let rank = 0;
 
-  if (adWiFiInput.checked) {
-    if (ad.offer.features.includes(adWiFiInput.value)) { rank += 1; }
-  }
-  if (adDishwasherInput.checked) {
-    if (ad.offer.features.includes(adDishwasherInput.value)) { rank += 1; }
-  }
-  if (adParkingInput.checked) {
-    if (ad.offer.features.includes(adParkingInput.value)) { rank += 1; }
-  }
-  if (adWasherInput.checked) {
-    if (ad.offer.features.includes(adWasherInput.value)) { rank += 1; }
-  }
-  if (adElevatorInput.checked) {
-    if (ad.offer.features.includes(adElevatorInput.value)) { rank += 1; }
-  }
-  if (adConditionerInput.checked) {
-    if (ad.offer.features.includes(adConditionerInput.value)) { rank += 1; } // Вообще не работает.
+  if (ad.offer.features !== undefined) {
+
+    if (adWiFiInput.checked) {
+      if (ad.offer.features.includes(adWiFiInput.value)) { rank += 1; }
+    }
+    if (adDishwasherInput.checked) {
+      if (ad.offer.features.includes(adDishwasherInput.value)) { rank += 1; }
+    }
+    if (adParkingInput.checked) {
+      if (ad.offer.features.includes(adParkingInput.value)) { rank += 1; }
+    }
+    if (adWasherInput.checked) {
+      if (ad.offer.features.includes(adWasherInput.value)) { rank += 1; }
+    }
+    if (adElevatorInput.checked) {
+      if (ad.offer.features.includes(adElevatorInput.value)) { rank += 1; }
+    }
+    if (adConditionerInput.checked) {
+      if (ad.offer.features.includes(adConditionerInput.value)) { rank += 1; }
+    }
+  } else {
+    rank = 0;
   }
 
   if (ad.offer.type === housingTypeElement.value) { rank += 3; }
-  if (ad.offer.price === housingPriceElement.value) { rank += 2; } // Тут даже не делал.
-  if (ad.offer.rooms >= housingRoomsElement.value) { rank += 2; }
+
+  const priceValue = () => {
+    if (ad.offer.price >= 10000 && ad.offer.price <= 50000) {
+      return 'middle';
+    }
+    if (ad.offer.price < 10000) {
+      return 'low';
+    }
+    if (ad.offer.price > 50000) {
+      return 'high';
+    }
+  };
+  if (priceValue() === housingPriceElement.value) { rank += 2; }
+  if (ad.offer.rooms === Number(housingRoomsElement.value)) {
+    rank += 2;
+  } else if (ad.offer.rooms > Number(housingRoomsElement.value)) { rank += 1; }
   if (ad.offer.guests <= housingGuestsElement.value) { rank += 2; }
 
   return rank;
@@ -155,19 +177,11 @@ const compareAds = (adA, adB) => {
   return rankB - rankA;
 };
 
-/* const addSimilarMarker = (item) => {
-  map.innerHTML = '';
-  item
-    .slice()
-    .sort(compareAds)
-    .slice(0, 10)
-    .forEach((value) => {
-      console.log(value.offer);
-    });
-}; */
+const markerGroup = L.layerGroup().addTo(map);
 
 const addSimilarMarker = (item) => {
-  map.innerHTML = '';
+  inactiveState();
+  markerGroup.clearLayers();
   item
     .slice()
     .sort(compareAds)
@@ -187,25 +201,37 @@ const addSimilarMarker = (item) => {
           icon,
         });
 
-      similarAdMarker // Надо удалять метки перед добавлением новых. Как?
-        .addTo(map)
+      similarAdMarker
+        .remove()
+        .addTo(markerGroup)
         .bindPopup(
           createPopup(value));
     });
+  activeState();
 };
 
 getData((item) => {
   addSimilarMarker(item);
-  housingTypeChange(() => addSimilarMarker(item));
-  housingPriceChange(() => addSimilarMarker(item));
-  housingRoomsChange(() => addSimilarMarker(item));
-  housingGuestsChange(() => addSimilarMarker(item));
-  adWiFiChange(() => addSimilarMarker(item));
-  adDishwasherChange(() => addSimilarMarker(item));
-  adParkingChange(() => addSimilarMarker(item));
-  adWasherChange(() => addSimilarMarker(item));
-  adElevatorChange(() => addSimilarMarker(item));
-  adConditionerChange(() => addSimilarMarker(item));
+  housingTypeChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingPriceChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingRoomsChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingGuestsChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adWiFiChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adDishwasherChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adParkingChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adWasherChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adElevatorChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adConditionerChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
 });
 
 export { map, marker, CENTER_TOKYO };

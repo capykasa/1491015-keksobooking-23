@@ -16,9 +16,11 @@ const inactiveState = () => {
   adToForm(mapFilters, 'select');
 };
 
-export const activeState = () => {
+const activeState = () => {
   removeToForm(adForm, 'fieldset');
   removeToForm(mapFilters, 'select');
 };
 
 inactiveState();
+
+export { inactiveState, activeState };
