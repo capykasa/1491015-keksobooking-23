@@ -109,14 +109,7 @@ const createPopup = (point) => {
   return popupElement;
 };
 
-const compareAds = (ad) => {
-  const adWiFiInput = document.querySelector('#filter-wifi');
-  const adDishwasherInput = document.querySelector('#filter-dishwasher');
-  const adParkingInput = document.querySelector('#filter-parking');
-  const adWasherInput = document.querySelector('#filter-washer');
-  const adElevatorInput = document.querySelector('#filter-elevator');
-  const adConditionerInput = document.querySelector('#filter-conditioner');
-
+const compareAdsBySelect = (ad) => {
   const housingTypeElement = document.querySelector('#housing-type');
   const housingPriceElement = document.querySelector('#housing-price');
   const housingRoomsElement = document.querySelector('#housing-rooms');
@@ -138,19 +131,30 @@ const compareAds = (ad) => {
     if (priceValue() === housingPriceElement.value || housingPriceElement.value === 'any') {
       if (ad.offer.rooms === Number(housingRoomsElement.value) || housingRoomsElement.value === 'any') {
         if (ad.offer.guests === housingGuestsElement.value || housingGuestsElement.value === 'any') {
-          if (ad.offer.features !== undefined) {
-            if ((adWiFiInput.checked && ad.offer.features.includes(adWiFiInput.value)) || !adWiFiInput.checked) {
-              if ((adDishwasherInput.checked && ad.offer.features.includes(adDishwasherInput.value)) || !adDishwasherInput.checked) {
-                if ((adParkingInput.checked && ad.offer.features.includes(adParkingInput.value)) || !adParkingInput.checked) {
-                  if ((adWasherInput.checked && ad.offer.features.includes(adWasherInput.value)) || !adWasherInput.checked) {
-                    if ((adElevatorInput.checked && ad.offer.features.includes(adElevatorInput.value)) || !adElevatorInput.checked) {
-                      if ((adConditionerInput.checked && ad.offer.features.includes(adConditionerInput.value)) || !adConditionerInput.checked) {
+          return true;
+        }
+      }
+    }
+  }
+};
 
-                        return true;
-                      }
-                    }
-                  }
-                }
+const compareAdsByCheckbox = (ad) => {
+  const adWiFiInput = document.querySelector('#filter-wifi');
+  const adDishwasherInput = document.querySelector('#filter-dishwasher');
+  const adParkingInput = document.querySelector('#filter-parking');
+  const adWasherInput = document.querySelector('#filter-washer');
+  const adElevatorInput = document.querySelector('#filter-elevator');
+  const adConditionerInput = document.querySelector('#filter-conditioner');
+
+  if (ad.offer.features !== undefined) {
+    if ((adWiFiInput.checked && ad.offer.features.includes(adWiFiInput.value)) || !adWiFiInput.checked) {
+      if ((adDishwasherInput.checked && ad.offer.features.includes(adDishwasherInput.value)) || !adDishwasherInput.checked) {
+        if ((adParkingInput.checked && ad.offer.features.includes(adParkingInput.value)) || !adParkingInput.checked) {
+          if ((adWasherInput.checked && ad.offer.features.includes(adWasherInput.value)) || !adWasherInput.checked) {
+            if ((adElevatorInput.checked && ad.offer.features.includes(adElevatorInput.value)) || !adElevatorInput.checked) {
+              if ((adConditionerInput.checked && ad.offer.features.includes(adConditionerInput.value)) || !adConditionerInput.checked) {
+
+                return true;
               }
             }
           }
@@ -167,7 +171,8 @@ const addSimilarMarker = (item) => {
   markerGroup.clearLayers();
   item
     .slice()
-    .filter(compareAds)
+    .filter(compareAdsBySelect)
+    .filter(compareAdsByCheckbox)
     .slice(0, 10)
     .forEach((value) => {
       const icon = L.icon({
