@@ -1,6 +1,7 @@
 import { activeState } from './form-state.js';
 import { HOUSES_TYPES } from './create-ads.js';
 import { getData } from './api.js';
+import { adConditionerChange, adDishwasherChange, adElevatorChange, adParkingChange, adWasherChange, adWiFiChange, housingGuestsChange, housingPriceChange, housingRoomsChange, housingTypeChange } from './validtion-form.js';
 
 const CENTER_TOKYO = {
   lat: 35.685646262993686,
@@ -105,29 +106,106 @@ const createPopup = (point) => {
   return popupElement;
 };
 
-const addSimilarMarker = (item) => {
-  item.forEach((value) => {
-    const icon = L.icon({
-      iconUrl: SIMILAR_MARKER.url,
-      iconSize: SIMILAR_MARKER.size,
-      iconAnchor: SIMILAR_MARKER.anchor,
-    });
-    const similarAdMarker = L.marker(
-      [
-        value.location.lat,
-        value.location.lng,
-      ],
-      {
-        icon,
-      });
+const getAdRank = (ad) => {
+  const adWiFiInput = document.querySelector('#filter-wifi');
+  const adDishwasherInput = document.querySelector('#filter-dishwasher');
+  const adParkingInput = document.querySelector('#filter-parking');
+  const adWasherInput = document.querySelector('#filter-washer');
+  const adElevatorInput = document.querySelector('#filter-elevator');
+  const adConditionerInput = document.querySelector('#filter-conditioner');
 
-    similarAdMarker
-      .addTo(map)
-      .bindPopup(
-        createPopup(value));
-  });
+  const housingTypeElement = document.querySelector('#housing-type');
+  const housingPriceElement = document.querySelector('#housing-price');
+  const housingRoomsElement = document.querySelector('#housing-rooms');
+  const housingGuestsElement = document.querySelector('#housing-guests');
+
+  let rank = 0;
+
+  if (adWiFiInput.checked) {
+    if (ad.offer.features.includes(adWiFiInput.value)) { rank += 1; }
+  }
+  if (adDishwasherInput.checked) {
+    if (ad.offer.features.includes(adDishwasherInput.value)) { rank += 1; }
+  }
+  if (adParkingInput.checked) {
+    if (ad.offer.features.includes(adParkingInput.value)) { rank += 1; }
+  }
+  if (adWasherInput.checked) {
+    if (ad.offer.features.includes(adWasherInput.value)) { rank += 1; }
+  }
+  if (adElevatorInput.checked) {
+    if (ad.offer.features.includes(adElevatorInput.value)) { rank += 1; }
+  }
+  if (adConditionerInput.checked) {
+    if (ad.offer.features.includes(adConditionerInput.value)) { rank += 1; } // Вообще не работает.
+  }
+
+  if (ad.offer.type === housingTypeElement.value) { rank += 3; }
+  if (ad.offer.price === housingPriceElement.value) { rank += 2; } // Тут даже не делал.
+  if (ad.offer.rooms >= housingRoomsElement.value) { rank += 2; }
+  if (ad.offer.guests <= housingGuestsElement.value) { rank += 2; }
+
+  return rank;
 };
 
-getData(addSimilarMarker);
+const compareAds = (adA, adB) => {
+  const rankA = getAdRank(adA);
+  const rankB = getAdRank(adB);
+
+  return rankB - rankA;
+};
+
+/* const addSimilarMarker = (item) => {
+  map.innerHTML = '';
+  item
+    .slice()
+    .sort(compareAds)
+    .slice(0, 10)
+    .forEach((value) => {
+      console.log(value.offer);
+    });
+}; */
+
+const addSimilarMarker = (item) => {
+  map.innerHTML = '';
+  item
+    .slice()
+    .sort(compareAds)
+    .slice(0, 10)
+    .forEach((value) => {
+      const icon = L.icon({
+        iconUrl: SIMILAR_MARKER.url,
+        iconSize: SIMILAR_MARKER.size,
+        iconAnchor: SIMILAR_MARKER.anchor,
+      });
+      const similarAdMarker = L.marker(
+        [
+          value.location.lat,
+          value.location.lng,
+        ],
+        {
+          icon,
+        });
+
+      similarAdMarker // Надо удалять метки перед добавлением новых. Как?
+        .addTo(map)
+        .bindPopup(
+          createPopup(value));
+    });
+};
+
+getData((item) => {
+  addSimilarMarker(item);
+  housingTypeChange(() => addSimilarMarker(item));
+  housingPriceChange(() => addSimilarMarker(item));
+  housingRoomsChange(() => addSimilarMarker(item));
+  housingGuestsChange(() => addSimilarMarker(item));
+  adWiFiChange(() => addSimilarMarker(item));
+  adDishwasherChange(() => addSimilarMarker(item));
+  adParkingChange(() => addSimilarMarker(item));
+  adWasherChange(() => addSimilarMarker(item));
+  adElevatorChange(() => addSimilarMarker(item));
+  adConditionerChange(() => addSimilarMarker(item));
+});
 
 export { map, marker, CENTER_TOKYO };
