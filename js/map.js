@@ -1,6 +1,10 @@
-import { activeState } from './form-state.js';
+import { activeState, inactiveState } from './form-state.js';
 import { HOUSES_TYPES } from './create-ads.js';
 import { getData } from './api.js';
+import { adConditionerChange, adDishwasherChange, adElevatorChange, adParkingChange, adWasherChange, adWiFiChange, housingGuestsChange, housingPriceChange, housingRoomsChange, housingTypeChange } from './validtion-form.js';
+import { debounce } from './utils/debounce.js';
+
+const RERENDER_DELAY = 500;
 
 const CENTER_TOKYO = {
   lat: 35.685646262993686,
@@ -105,29 +109,117 @@ const createPopup = (point) => {
   return popupElement;
 };
 
-const addSimilarMarker = (item) => {
-  item.forEach((value) => {
-    const icon = L.icon({
-      iconUrl: SIMILAR_MARKER.url,
-      iconSize: SIMILAR_MARKER.size,
-      iconAnchor: SIMILAR_MARKER.anchor,
-    });
-    const similarAdMarker = L.marker(
-      [
-        value.location.lat,
-        value.location.lng,
-      ],
-      {
-        icon,
-      });
+const compareAdsBySelect = (ad) => {
+  const housingTypeElement = document.querySelector('#housing-type');
+  const housingPriceElement = document.querySelector('#housing-price');
+  const housingRoomsElement = document.querySelector('#housing-rooms');
+  const housingGuestsElement = document.querySelector('#housing-guests');
 
-    similarAdMarker
-      .addTo(map)
-      .bindPopup(
-        createPopup(value));
-  });
+  const priceValue = () => {
+    if (ad.offer.price >= 10000 && ad.offer.price <= 50000) {
+      return 'middle';
+    }
+    if (ad.offer.price < 10000) {
+      return 'low';
+    }
+    if (ad.offer.price > 50000) {
+      return 'high';
+    }
+    return 'any';
+  };
+  if (ad.offer.type === housingTypeElement.value || housingTypeElement.value === 'any') {
+    if (priceValue() === housingPriceElement.value || housingPriceElement.value === 'any') {
+      if (ad.offer.rooms === Number(housingRoomsElement.value) || housingRoomsElement.value === 'any') {
+        if (ad.offer.guests === housingGuestsElement.value || housingGuestsElement.value === 'any') {
+          return true;
+        }
+      }
+    }
+  }
 };
 
-getData(addSimilarMarker);
+const compareAdsByCheckbox = (ad) => {
+  const adWiFiInput = document.querySelector('#filter-wifi');
+  const adDishwasherInput = document.querySelector('#filter-dishwasher');
+  const adParkingInput = document.querySelector('#filter-parking');
+  const adWasherInput = document.querySelector('#filter-washer');
+  const adElevatorInput = document.querySelector('#filter-elevator');
+  const adConditionerInput = document.querySelector('#filter-conditioner');
+
+  if (ad.offer.features !== undefined) {
+    if ((adWiFiInput.checked && ad.offer.features.includes(adWiFiInput.value)) || !adWiFiInput.checked) {
+      if ((adDishwasherInput.checked && ad.offer.features.includes(adDishwasherInput.value)) || !adDishwasherInput.checked) {
+        if ((adParkingInput.checked && ad.offer.features.includes(adParkingInput.value)) || !adParkingInput.checked) {
+          if ((adWasherInput.checked && ad.offer.features.includes(adWasherInput.value)) || !adWasherInput.checked) {
+            if ((adElevatorInput.checked && ad.offer.features.includes(adElevatorInput.value)) || !adElevatorInput.checked) {
+              if ((adConditionerInput.checked && ad.offer.features.includes(adConditionerInput.value)) || !adConditionerInput.checked) {
+
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+const markerGroup = L.layerGroup().addTo(map);
+
+const addSimilarMarker = (item) => {
+  inactiveState();
+  markerGroup.clearLayers();
+  item
+    .slice()
+    .filter(compareAdsBySelect)
+    .filter(compareAdsByCheckbox)
+    .slice(0, 10)
+    .forEach((value) => {
+      const icon = L.icon({
+        iconUrl: SIMILAR_MARKER.url,
+        iconSize: SIMILAR_MARKER.size,
+        iconAnchor: SIMILAR_MARKER.anchor,
+      });
+      const similarAdMarker = L.marker(
+        [
+          value.location.lat,
+          value.location.lng,
+        ],
+        {
+          icon,
+        });
+
+      similarAdMarker
+        .remove()
+        .addTo(markerGroup)
+        .bindPopup(
+          createPopup(value));
+    });
+  activeState();
+};
+
+getData((item) => {
+  addSimilarMarker(item);
+  housingTypeChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingPriceChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingRoomsChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  housingGuestsChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adWiFiChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adDishwasherChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adParkingChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adWasherChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adElevatorChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+  adConditionerChange(debounce(() => addSimilarMarker(item), RERENDER_DELAY,
+  ));
+});
 
 export { map, marker, CENTER_TOKYO };
