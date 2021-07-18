@@ -39,6 +39,7 @@ const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
 
 const publishForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
 
 const housingTypeElement = document.querySelector('#housing-type');
 const housingPriceElement = document.querySelector('#housing-price');
@@ -191,6 +192,7 @@ timeOut.addEventListener('change', () => {
 });
 
 resetForm.addEventListener('click', () => {
+  mapFilters.reset();
   marker.setLatLng(CENTER_TOKYO);
   map.setView(CENTER_TOKYO, 16);
 });
@@ -202,6 +204,7 @@ const successMessage = () => {
   isEscEvent(successElement);
   isEnterEvent(successElement);
   publishForm.reset();
+  mapFilters.reset();
   marker.setLatLng(CENTER_TOKYO);
   map.setView(CENTER_TOKYO, 16);
 };
