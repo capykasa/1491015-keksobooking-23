@@ -1,26 +1,27 @@
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
+
 const adFormDisabled = 'ad-form--disabled';
 
-const adToForm = (someClass, someElement) => {
+const addToForm = (someClass, someElement) => {
   someClass.classList.add(adFormDisabled);
   someClass.querySelectorAll(someElement).forEach((item) => item.setAttribute('disabled', 'disabled'));
 };
-const removeToForm = (someClass, someElement) => {
+const removeFromForm = (someClass, someElement) => {
   someClass.classList.remove(adFormDisabled);
   someClass.querySelectorAll(someElement).forEach((item) => item.removeAttribute('disabled', 'disabled'));
 };
 
-const inactiveState = () => {
-  adToForm(adForm, 'fieldset');
-  adToForm(mapFilters, 'select');
+const inactivateForm = () => {
+  addToForm(adForm, 'fieldset');
+  addToForm(mapFilters, 'select');
 };
 
-const activeState = () => {
-  removeToForm(adForm, 'fieldset');
-  removeToForm(mapFilters, 'select');
+const activateForm = () => {
+  removeFromForm(adForm, 'fieldset');
+  removeFromForm(mapFilters, 'select');
 };
 
-inactiveState();
+inactivateForm();
 
-export { inactiveState, activeState };
+export { inactivateForm, activateForm };
