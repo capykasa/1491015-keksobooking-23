@@ -1,7 +1,14 @@
 import { sendData } from './api.js';
-import { HOUSES_TYPES } from './create-ads.js';
 import { CENTER_TOKYO, map, marker } from './map.js';
 import { closedWindow, isEnterEvent, isEscEvent } from './util.js';
+
+const HOUSES_TYPES = {
+  'palace': { name: 'Дворец', minPrice: 10000 },
+  'flat': { name: 'Квартира', minPrice: 1000 },
+  'house': { name: 'Дом', minPrice: 5000 },
+  'bungalow': { name: 'Бунгало', minPrice: 0 },
+  'hotel': { name: 'Отель', minPrice: 3000 },
+};
 
 const resetForm = document.querySelector('.ad-form__reset');
 
@@ -221,4 +228,4 @@ const setFormSubmit = (onSuccess, onFail) => {
 
 setFormSubmit(successMessage, errorMessage);
 
-export { housingTypeChange, housingPriceChange, housingRoomsChange, housingGuestsChange, adWiFiChange, adDishwasherChange, adParkingChange, adWasherChange, adElevatorChange, adConditionerChange };
+export { HOUSES_TYPES, housingTypeChange, housingPriceChange, housingRoomsChange, housingGuestsChange, adWiFiChange, adDishwasherChange, adParkingChange, adWasherChange, adElevatorChange, adConditionerChange };
