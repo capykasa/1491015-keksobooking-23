@@ -1,7 +1,6 @@
 import { activeState, inactiveState } from './form-state.js';
-import { HOUSES_TYPES } from './create-ads.js';
 import { getData } from './api.js';
-import { adConditionerChange, adDishwasherChange, adElevatorChange, adParkingChange, adWasherChange, adWiFiChange, housingGuestsChange, housingPriceChange, housingRoomsChange, housingTypeChange } from './validtion-form.js';
+import { adConditionerChange, adDishwasherChange, adElevatorChange, adParkingChange, adWasherChange, adWiFiChange, HOUSES_TYPES, housingGuestsChange, housingPriceChange, housingRoomsChange, housingTypeChange } from './validtion-form.js';
 import { debounce } from './utils/debounce.js';
 
 const RERENDER_DELAY = 500;
