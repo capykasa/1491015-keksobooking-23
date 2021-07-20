@@ -108,7 +108,7 @@ const createPopup = (point) => {
   return popupElement;
 };
 
-const compareAdsBySelect = (ad) => {
+const compareAds = (ad) => {
   const priceValue = () => {
     if (ad.offer.price >= 10000 && ad.offer.price <= 50000) {
       return 'middle';
@@ -125,19 +125,17 @@ const compareAdsBySelect = (ad) => {
     if (priceValue() === typesNodes[1].node.value || typesNodes[1].node.value === 'any') {
       if (ad.offer.rooms === Number(typesNodes[2].node.value) || typesNodes[2].node.value === 'any') {
         if (ad.offer.guests === Number(typesNodes[3].node.value) || typesNodes[3].node.value === 'any') {
-          return true;
+
+          const filterChecked = featuresNodes
+            .filter((feature) => feature.node.checked)
+            .map((item) => item.feature);
+
+          return filterChecked.every((check) => ad.offer.features ? ad.offer.features.includes(check) : false);
         }
       }
     }
   }
-};
 
-const compareAdsByCheckbox = (ad) => {
-  const filterChecked = featuresNodes
-    .filter((feature) => feature.node.checked)
-    .map((item) => item.feature);
-
-  return filterChecked.every((check) => ad.offer.features ? ad.offer.features.includes(check) : false);
 };
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -146,8 +144,7 @@ const addSimilarMarker = (data) => {
   inactivateForm();
   markerGroup.clearLayers();
   data
-    .filter(compareAdsBySelect)
-    .filter(compareAdsByCheckbox)
+    .filter(compareAds)
     .slice(0, 10)
     .forEach((value) => {
       const icon = L.icon({
