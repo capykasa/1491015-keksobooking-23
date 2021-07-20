@@ -10,6 +10,9 @@ const HOUSES_TYPES = {
   'hotel': { name: 'Отель', minPrice: 3000 },
 };
 
+const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+const TYPES = ['type', 'price', 'rooms', 'guests'];
+
 const resetForm = document.querySelector('.ad-form__reset');
 
 const bodyElement = document.querySelector('body');
@@ -39,99 +42,18 @@ const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
 
 const publishForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
 
-const housingTypeElement = document.querySelector('#housing-type');
-const housingPriceElement = document.querySelector('#housing-price');
-const housingRoomsElement = document.querySelector('#housing-rooms');
-const housingGuestsElement = document.querySelector('#housing-guests');
+const featuresNodes = FEATURES.map((feature) => ({
+  feature,
+  node: document.querySelector(`#filter-${feature}`),
+}));
+const typesNodes = TYPES.map((type) => ({
+  feature: type,
+  node: document.querySelector(`#housing-${type}`),
+}));
 
-const adWiFiInput = document.querySelector('#filter-wifi');
-const adDishwasherInput = document.querySelector('#filter-dishwasher');
-const adParkingInput = document.querySelector('#filter-parking');
-const adWasherInput = document.querySelector('#filter-washer');
-const adElevatorInput = document.querySelector('#filter-elevator');
-const adConditionerInput = document.querySelector('#filter-conditioner');
-
-const housingTypeChange = (cb) => {
-  housingTypeElement.addEventListener('change', (evt) => {
-    const selectedType = evt.target.value;
-    selectedType;
-    cb();
-  });
-};
-
-const housingPriceChange = (cb) => {
-  housingPriceElement.addEventListener('change', (evt) => {
-    const selectedPrice = evt.target.value;
-    selectedPrice;
-    cb();
-  });
-};
-
-const housingRoomsChange = (cb) => {
-  housingRoomsElement.addEventListener('change', (evt) => {
-    const selectedRooms = evt.target.value;
-    selectedRooms;
-    cb();
-  });
-};
-
-const housingGuestsChange = (cb) => {
-  housingGuestsElement.addEventListener('change', (evt) => {
-    const selectedGuests = evt.target.value;
-    selectedGuests;
-    cb();
-  });
-};
-
-const adWiFiChange = (cb) => {
-  adWiFiInput.addEventListener('change', (evt) => {
-    const selectWiFi = evt.target.checked;
-    selectWiFi;
-    cb();
-  });
-};
-
-const adDishwasherChange = (cb) => {
-  adDishwasherInput.addEventListener('change', (evt) => {
-    const selectDishwasher = evt.target.checked;
-    selectDishwasher;
-    cb();
-  });
-};
-
-const adParkingChange = (cb) => {
-  adParkingInput.addEventListener('change', (evt) => {
-    const selectParking = evt.target.checked;
-    selectParking;
-    cb();
-  });
-};
-
-const adWasherChange = (cb) => {
-  adWasherInput.addEventListener('change', (evt) => {
-    const selectWasher = evt.target.checked;
-    selectWasher;
-    cb();
-  });
-};
-
-const adElevatorChange = (cb) => {
-  adElevatorInput.addEventListener('change', (evt) => {
-    const selectElevator = evt.target.checked;
-    selectElevator;
-    cb();
-  });
-};
-
-const adConditionerChange = (cb) => {
-  adConditionerInput.addEventListener('change', (evt) => {
-    const selectConditioner = evt.target.checked;
-    selectConditioner;
-    cb();
-  });
-};
-
+const allFilters = [...featuresNodes, ...typesNodes];
 
 typeOfHouse.addEventListener('change', () => {
   minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
@@ -191,6 +113,7 @@ timeOut.addEventListener('change', () => {
 });
 
 resetForm.addEventListener('click', () => {
+  mapFilters.reset();
   marker.setLatLng(CENTER_TOKYO);
   map.setView(CENTER_TOKYO, 16);
 });
@@ -202,6 +125,7 @@ const successMessage = () => {
   isEscEvent(successElement);
   isEnterEvent(successElement);
   publishForm.reset();
+  mapFilters.reset();
   marker.setLatLng(CENTER_TOKYO);
   map.setView(CENTER_TOKYO, 16);
 };
@@ -228,4 +152,4 @@ const setFormSubmit = (onSuccess, onFail) => {
 
 setFormSubmit(successMessage, errorMessage);
 
-export { HOUSES_TYPES, housingTypeChange, housingPriceChange, housingRoomsChange, housingGuestsChange, adWiFiChange, adDishwasherChange, adParkingChange, adWasherChange, adElevatorChange, adConditionerChange };
+export { featuresNodes, typesNodes, allFilters, HOUSES_TYPES };
