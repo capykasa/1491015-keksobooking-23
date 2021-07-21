@@ -1,7 +1,8 @@
-import { activateForm, inactivateForm } from './form-state.js';
+import { activateForm, deactivateForm } from './form-state.js';
 import { getData } from './api.js';
 import { allFilters, featuresNodes, HOUSES_TYPES, typesNodes } from './validtion-form.js';
 import { debounce } from './utils/debounce.js';
+import { showAlert } from './util.js';
 
 const RERENDER_DELAY = 500;
 
@@ -141,7 +142,7 @@ const compareAds = (ad) => {
 const markerGroup = L.layerGroup().addTo(map);
 
 const addSimilarMarker = (data) => {
-  inactivateForm();
+  deactivateForm();
   markerGroup.clearLayers();
   data
     .filter(compareAds)
@@ -170,12 +171,15 @@ const addSimilarMarker = (data) => {
   activateForm();
 };
 
-getData((data) => {
-  addSimilarMarker(data);
+getData(
+  (data) => {
+    addSimilarMarker(data);
 
-  allFilters.forEach((filter) => filter.node.addEventListener('change', () => {
-    debounce(() => addSimilarMarker(data), RERENDER_DELAY)();
-  }));
-});
+    allFilters.forEach((filter) => filter.node.addEventListener('change', () => {
+      debounce(() => addSimilarMarker(data), RERENDER_DELAY)();
+    }));
+  },
+  () => showAlert(),
+);
 
 export { map, marker, CENTER_TOKYO };

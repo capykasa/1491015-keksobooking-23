@@ -12,7 +12,7 @@ const removeFromForm = (someClass, someElement) => {
   someClass.querySelectorAll(someElement).forEach((item) => item.removeAttribute('disabled', 'disabled'));
 };
 
-const inactivateForm = () => {
+const deactivateForm = () => {
   addToForm(adForm, 'fieldset');
   addToForm(mapFilters, 'select');
 };
@@ -22,6 +22,6 @@ const activateForm = () => {
   removeFromForm(mapFilters, 'select');
 };
 
-inactivateForm();
+deactivateForm();
 
-export { inactivateForm, activateForm };
+export { deactivateForm, activateForm };

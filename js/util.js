@@ -1,13 +1,18 @@
-const findRandomNumber = function (minValue, maxValue) {
-  return Math.random() * (maxValue - minValue) + minValue;
-};
+const showAlert = () => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
 
-const findRandomIntegerNumber = function (minValue, maxValue) {
-  return Math.round(findRandomNumber(minValue, maxValue));
-};
+  alertContainer.textContent = 'Данные не загруженны. Попробуйте обновить страницу.';
 
-const findRandomCoordinates = function (minValue, maxValue, numberAfterPoint) {
-  return findRandomNumber(minValue, maxValue).toFixed([numberAfterPoint]);
+  document.body.append(alertContainer);
 };
 
 const isEscEvent = (value) => {
@@ -34,4 +39,4 @@ const closedWindow = (value) => {
   });
 };
 
-export { findRandomIntegerNumber, findRandomCoordinates, closedWindow, isEscEvent, isEnterEvent };
+export { showAlert, closedWindow, isEscEvent, isEnterEvent };

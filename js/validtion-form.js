@@ -13,6 +13,12 @@ const HOUSES_TYPES = {
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const TYPES = ['type', 'price', 'rooms', 'guests'];
 
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+const MAX_PRICE_VALUE = 1000000;
+
+let minPriceValue = 5000;
+
 const resetForm = document.querySelector('.ad-form__reset');
 
 const bodyElement = document.querySelector('body');
@@ -25,10 +31,6 @@ const errorTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-const MIN_TITLE_LENGTH = 30;
-const MAX_TITLE_LENGTH = 100;
-const MAX_PRICE_VALUE = 1000000;
-let minPriceValue = 1000;
 const titleInput = document.querySelector('#title');
 
 const priceInput = document.querySelector('#price');
@@ -55,17 +57,13 @@ const typesNodes = TYPES.map((type) => ({
 
 const allFilters = [...featuresNodes, ...typesNodes];
 
-typeOfHouse.addEventListener('change', () => {
-  minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
-  priceInput.placeholder = minPriceValue;
-});
-
 const setValidity = (element, item) => {
   element.setCustomValidity(item);
   element.reportValidity();
 };
 
-const checkingRoomsAndGuests = function () {
+
+const checkRoomsAndGuests = function () {
   let message = '';
   if (roomNumber.value === '1' && capacity.value !== '1') {
     message = `Доступно только для ${capacity[2].textContent}`;
@@ -81,8 +79,16 @@ const checkingRoomsAndGuests = function () {
   setValidity(roomNumber, message);
 };
 
-roomNumber.addEventListener('change', checkingRoomsAndGuests);
-capacity.addEventListener('change', checkingRoomsAndGuests);
+const roomNumberHandler = () => {
+  checkRoomsAndGuests();
+};
+
+const capacityHandler = () => {
+  checkRoomsAndGuests();
+};
+
+roomNumber.addEventListener('change', roomNumberHandler);
+capacity.addEventListener('change', capacityHandler);
 
 titleInput.addEventListener('input', () => {
   let message = '';
@@ -94,7 +100,7 @@ titleInput.addEventListener('input', () => {
   setValidity(titleInput, message);
 });
 
-priceInput.addEventListener('input', () => {
+const priceInputChange = () => {
   let message = '';
   if (priceInput.value > MAX_PRICE_VALUE) {
     message = `Максимальное значение: ${MAX_PRICE_VALUE}`;
@@ -102,7 +108,15 @@ priceInput.addEventListener('input', () => {
     message = `Минимальное значение: ${minPriceValue}`;
   }
   setValidity(priceInput, message);
+};
+
+typeOfHouse.addEventListener('change', () => {
+  minPriceValue = HOUSES_TYPES[typeOfHouse.value].minPrice;
+  priceInput.placeholder = minPriceValue;
+  priceInputChange();
 });
+
+priceInput.addEventListener('input', priceInputChange);
 
 timeIn.addEventListener('change', () => {
   timeOut.value = timeIn.value;
@@ -118,7 +132,7 @@ resetForm.addEventListener('click', () => {
   map.setView(CENTER_TOKYO, 16);
 });
 
-const successMessage = () => {
+const reportSuccess = () => {
   const successElement = successTemplate.cloneNode(true);
   bodyElement.appendChild(successElement);
   closedWindow(successElement);
@@ -130,7 +144,7 @@ const successMessage = () => {
   map.setView(CENTER_TOKYO, 16);
 };
 
-const errorMessage = () => {
+const reportError = () => {
   const errorElement = errorTemplate.cloneNode(true);
   bodyElement.appendChild(errorElement);
   closedWindow(errorElement);
@@ -150,6 +164,6 @@ const setFormSubmit = (onSuccess, onFail) => {
   });
 };
 
-setFormSubmit(successMessage, errorMessage);
+setFormSubmit(reportSuccess, reportError);
 
 export { featuresNodes, typesNodes, allFilters, HOUSES_TYPES };
